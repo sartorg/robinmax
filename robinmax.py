@@ -56,7 +56,7 @@ def register_options(parser):
                         default=-1, type=int,
                         help='Solve the problem using heuristics.' + 
                             ' 1 = Column generation, 2 = Random,' +
-                            ' 3 = Two-opt, 4 = Old column generation. ' +
+                            ' 3 = Two-opt.' +
                             ' Default -1, no heuristic.')
     parser.add_argument('--disable_cuts', '-dc', action='store',
                         dest='disable_cuts',
@@ -165,78 +165,6 @@ def robinmax(graph, num_seeds, max_cover_size, thresh_budget=0,
                 'Iterations', str(iterations),
                 'Best objective', str(best_obj)])
         
-        elif (heuristics == 4):
-            start_time = time.time()
-            previous_num_covers = -1
-            best_obj = 0
-            covers = [list() for _ in range(graph.num_nodes)]
-            thresholds = [list() for _ in range(graph.num_nodes)]
-            num_covers = 0
-            iter_number = 0
-            stop = False
-            to_exclude = list()
-            while (not stop and
-                   time.time() - start_time <= max_time and
-                   iter_number < cg_init_iters):
-
-                time_left = max(0, (max_time - (time.time() - start_time)))
-
-                lazy_info, pruned_info, results = bac.robinmax_bac(
-                    graph, num_seeds, max_cover_size, thresh_budget,
-                    max_thresh_dev, weight_budget, max_weight_dev,
-                    max_time=time_left, epsilon=epsilon, debugging=debugging,
-                    disable_cuts=disable_cuts, lp=lp, covers=covers, 
-                    thresholds=thresholds,
-                    save_pruned=(num_covers==previous_num_covers),
-                    run_as_heuristic=True, num_nodes=5000, 
-                    points_to_exclude=to_exclude, out_f=out_f)
-
-                print('ITERATION: ', iter_number)
-                print('Integer solutions: {:d}'.format(len(lazy_info)))
-                print('Pruned points: {:d}'.format(len(pruned_info)))
-
-                time_left = max(0, (max_time - (time.time() - start_time)))
-
-                # Generate covers through column generation
-                num_generated_covers, obj = col.column_generation(
-                    graph, lazy_info, pruned_info, covers, thresholds,
-                    thresh_budget, max_thresh_dev, weight_budget,
-                    max_weight_dev, time_left, epsilon, debugging, out_f)
-
-                if (round(best_obj) < round(obj)):
-                    best_obj = obj 
-                print('Best objective: {:.2f}'.format(best_obj))
-                print('Generated covers (#): ', num_generated_covers)
-
-                if (previous_num_covers == num_covers and
-                    num_generated_covers == 0):
-                    stop = True
-
-                to_exclude.extend([incumbent for (incumbent, theta, phi)
-                                in lazy_info])
-
-                previous_num_covers = num_covers
-                num_covers += num_generated_covers
-                iter_number += 1
-
-            if (time.time() - start_time <= max_time):
-                # Run once more with all columns found so far
-                time_left = max(0, (max_time - (time.time() - start_time)))
-                lazy_info, pruned_info, results = bac.robinmax_bac(
-                    graph, num_seeds, max_cover_size, thresh_budget,
-                    max_thresh_dev, weight_budget, max_weight_dev,
-                    max_time=time_left, epsilon=epsilon, debugging=debugging,
-                    disable_cuts=disable_cuts, lp=lp, covers=covers, 
-                    thresholds=thresholds, save_pruned=False,
-                    run_as_heuristic=False, out_f=out_f)
-                # Update best obj
-                if (results[4] > best_obj):
-                    best_obj = results[4]
-            
-            str_results = ';'.join(['Elapsed time', str(time.time() - start_time),
-                'Iterations', str(iter_number), 'Generated covers', str(num_covers),
-                'Best objective', str(best_obj)])
-
         elif (heuristics == 1):
             start_time = time.time()
 
@@ -258,8 +186,7 @@ def robinmax(graph, num_seeds, max_cover_size, thresh_budget=0,
 
             time_left = max(0, (max_time - (time.time() - start_time)))
 
-            results = bac.robinmax_bac_restart(
-                graph, num_seeds, max_cover_size, thresh_budget,
+            results = bac.bac_restart(graph, num_seeds, max_cover_size, thresh_budget,
                 max_thresh_dev, weight_budget, max_weight_dev,
                 time_left, epsilon, debugging, disable_cuts, lp,
                 covers=covers, thresholds=thresholds, save_pruned=False,
@@ -283,8 +210,7 @@ def robinmax(graph, num_seeds, max_cover_size, thresh_budget=0,
 
             time_left = max(0, (max_time - (time.time() - start_time)))
 
-            results = bac.robinmax_bac_restart(
-                graph, num_seeds, max_cover_size, thresh_budget,
+            results = bac.bac_restart(graph, num_seeds, max_cover_size, thresh_budget,
                 max_thresh_dev, weight_budget, max_weight_dev,
                 time_left, epsilon, debugging, disable_cuts, lp, covers=covers, 
                 thresholds=thresholds, save_pruned=False,
