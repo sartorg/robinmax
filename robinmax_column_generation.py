@@ -180,7 +180,7 @@ def column_generation(graph, incumbent_info, covers, thresholds,
 
             time_left = max(0, (max_time - (time.time() - start_time)))
             # Solve pricing problem            
-            generated_covers = pr.pricing_problem3(
+            generated_covers = pr.pricing_problem(
                 graph, current_obj[1], phi_pointer, 
                 covers, x_val, epsilon,
                 thresh_budget, max_thresh_dev, max_weight_dev,
