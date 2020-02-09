@@ -1,10 +1,1 @@
-__pycache__/robinmax_auxprob_creator.cpython-35.pyc
-__pycache__/robinmax_bac_indicator.cpython-35.pyc
-__pycache__/robinmax_callbacks.cpython-35.pyc
-__pycache__/robinmax_column_generation.cpython-35.pyc
-__pycache__/robinmax_cover_generator.cpython-35.pyc
-__pycache__/robinmax_graph.cpython-35.pyc
-__pycache__/robinmax_heuristics.cpython-35.pyc
-__pycache__/robinmax_pricing.cpython-35.pyc
-__pycache__/robinmax_utils.cpython-35.pyc
-__pycache__/robinmax_bac.cpython-35.pyc
+__pycache__/*
