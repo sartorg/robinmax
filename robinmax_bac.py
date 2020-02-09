@@ -13,7 +13,12 @@ import ast
 import numpy as np
 import collections
 
-import cplex
+try:
+    import cplex
+except ImportError:
+    print('\nThe current implementation of the Branch-and-Cut algorithm requires CPLEX.')
+    raise
+    
 from cplex.exceptions import CplexError
 import robinmax_graph as gr
 import robinmax_cover_generator as cg
