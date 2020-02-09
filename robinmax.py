@@ -15,7 +15,6 @@ import robinmax_graph as gr
 import robinmax_cover_generator as cg
 import robinmax_utils as util
 import robinmax_heuristics as heurs
-import robinmax_column_generation as col
 import time
 
 def register_options(parser):

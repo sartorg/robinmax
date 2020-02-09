@@ -360,7 +360,7 @@ def bac_restart(graph, num_seeds, max_cover_size,
             print('ITERATION: {:d}'.format(iterations))
 
             # Generate covers through column generation
-            num_generated_covers, obj, all_generated, all_indices = col.column_generation2(
+            num_generated_covers, obj, all_generated, all_indices = col.column_generation(
                 graph, [current_obj[1]], cover_set, thresholds,
                 cover_index, cover_pointer, cover_size, num_covers,
                 thresh_budget, max_thresh_dev, weight_budget,
