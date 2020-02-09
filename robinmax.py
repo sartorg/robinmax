@@ -10,7 +10,7 @@ import argparse
 import ast
 import numpy as np
 
-import robinmax_bac_indicator as bac
+import robinmax_bac as bac
 import robinmax_graph as gr
 import robinmax_cover_generator as cg
 import robinmax_utils as util
