@@ -279,7 +279,7 @@ def bac_restart(graph, num_seeds, max_cover_size,
         iterations += 1
 
         if (is_robust or run_as_heuristic):       
-            lazy_constr = cb.LazyConstraint2(
+            lazy_constr = cb.LazyConstraint(
                 graph, num_seeds, cover_set, thresholds, cover_index,
                 cover_pointer, cover_size, num_covers,
                 thresh_budget, max_thresh_dev, weight_budget, 
