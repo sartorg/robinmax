@@ -14,6 +14,9 @@ def least_significant_digit(number):
     """
     number_string = str(number)
     if ('.' in number_string):
+        print(number_string)
+        print(number_string.partition('.'))
+        print(number_string.partition('.')[2])
         return -len(number_string.partition('.')[2])
     else:
         return 0

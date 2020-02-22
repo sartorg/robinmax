@@ -29,6 +29,8 @@ def register_options(parser):
     """
     parser.add_argument('graph_file', action = 'store', type = str,
                         help = 'File containing graph connectivity information.')
+    parser.add_argument('num_seeds', action= 'store', type = int,
+                        help = 'Number of seed nodes.')
     parser.add_argument('--debug', action = 'store', dest = 'debug',
                         default = False, type = ast.literal_eval,
                         help = 'Print debug info. Default False.')
@@ -47,9 +49,6 @@ def register_options(parser):
     parser.add_argument('--time', '-t', type = float,
                         default = 3600,
                         help = 'Max time. Default 3600.')
-    parser.add_argument('--num_seeds', '-ns', type = int,
-                        default = 3, help = 'Number of seed nodes. ' +
-                        'Default 3.')
     parser.add_argument('--heuristics', '-heurs', action='store',
                         dest='heuristics',
                         default=-1, type=int,
@@ -66,21 +65,25 @@ def register_options(parser):
                         help='Number of CG initialization interations. ' +
                         'Default 20.')
     parser.add_argument('--max_columns_per_round', '-mcr', action='store',
-                        dest='max_columns_per_round', default=10000,
-                        type=int, help='Stop generating columns after ' +
-                        'this many. Default 10000.')
+                        dest='max_columns_per_round', default=0,
+                        type=int, help='Maximum number of generated columns ' +
+                        'per round as a fraction of the number of nodes (n). ' + 
+                        'Default 2n.')
     parser.add_argument('--max_col_iters_per_round', '-mci', action='store',
                         dest='max_col_iters_per_round', default=0,
-                        type=int, help='Stop trying to generate columns after ' +
-                        'this many iterations. Default 0.')
+                        type=int, help='Maximum number of iterations when ' +
+                        'trying to generate columns at each round ' +
+                        'as a fraction of the number of nodes (n). ' + 
+                        'Default 2n.')
     parser.add_argument('--max_pricing_iters', '-mpi', action='store',
                         dest='max_pricing_iters', default=0,
-                        type=int, help='Stop solving pricing problems after ' +
-                        'this many. Default 0.')
+                        type=int, help='Maximum number of pricing problems ' +
+                        'as a fraction of the number of nodes (n). ' +
+                        'Default 0.025n.')
     parser.add_argument('--num_init_covers', '-nic', action='store',
-                        dest='num_init_covers', default=5000,
+                        dest='num_init_covers', default=2500,
                         type=int, help='The initial number of generated ' +
-                        'covers. Default 5000.')
+                        'covers. Default 2500.')
     parser.add_argument('--random_seed', '-rs', action='store',
                         dest='random_seed', default=1981231712,
                         type=int, help='Random seed. Default 1981231712.')
@@ -94,9 +97,9 @@ def register_options(parser):
 def robinmax(graph, num_seeds, max_cover_size, thresh_budget=0,
              max_thresh_dev=0.0, weight_budget=0.0,
              max_weight_dev=0.0, max_time=3600, 
-             heuristics=-1, cg_init_iters=20, max_columns_per_round=10000,
+             heuristics=-1, cg_init_iters=20, max_columns_per_round=0,
              max_col_iters_per_round=0, max_pricing_iters=0,
-             num_init_covers=5000, debugging=False, disable_cuts=False, 
+             num_init_covers=2500, debugging=False, disable_cuts=False, 
              lp=False, out_f=sys.__stdout__):
 
     # Compute the epsilon to use throughout the algorithm

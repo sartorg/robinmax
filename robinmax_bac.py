@@ -119,9 +119,12 @@ def bac_restart(graph, num_seeds, max_cover_size,
 
     # Default values
     if (max_pricing_iters == 0):
-        max_pricing_iters = graph.num_nodes*0.05
+        max_pricing_iters = 0.025 * graph.num_nodes
 
     if (max_col_iters_per_round == 0):
+        max_col_iters_per_round = 2 * graph.num_nodes
+
+    if (max_columns_per_round == 0):
         max_col_iters_per_round = 2 * graph.num_nodes
 
     
