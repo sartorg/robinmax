@@ -1,2 +1,2 @@
 # robinmax
-Package for solving a (possibly) robust version of the influence maximization problem.
+Package for solving a robust version of the influence maximization problem.
